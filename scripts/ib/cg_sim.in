@@ -1,0 +1,119 @@
+# Lammps Input File Created for CG runs
+variable        output_freq string 100
+variable        input string GGGGG.30.cg.TYPENUM
+variable        input1 string GGGGG.30.cg
+variable        output string iterNUM.TYPE
+
+units           real
+atom_style      full
+
+
+pair_style      table linear 9999
+bond_style      table linear 700
+angle_style     table linear 1801
+dihedral_style  table linear 360
+improper_style  none
+
+boundary        p p p
+read_data       ${input1}.lammpstop
+include         ${input}.lammpspar
+include         ${input1}.paircoeff
+#read_restart       restart2.${input}
+
+
+
+velocity all create 298.0 4923344 rot yes dist gaussian
+
+#setup neighbor calculations
+neighbor        12.0    bin
+neigh_modify    every 1 delay 0 check no
+special_bonds 	lj 0.0 0.0 0.0 coul 0.0 0.0 0.0
+#group mol1 molecule 1:9
+#group mol2 molecule 10:18
+#group mol3 molecule 19:27
+#group mol4 molecule 28:36
+#group mol5 molecule 37:45
+#group mol6 molecule 46:54
+#group mol7 molecule 55:63
+#group mol8 molecule 64:72
+#group mol9 molecule 73:81
+#group mol10 molecule 82:90
+#group mol11 molecule 91:99
+#group mol12 molecule 100:108
+#group mol13 molecule 109:117
+#group mol14 molecule 118:126
+#group mol15 molecule 127:135
+#group mol16 molecule 136:144
+#group mol17 molecule 145:153
+#group mol18 molecule 154:162
+#group mol19 molecule 163:171
+#group mol20 molecule 172:180
+#group mol21 molecule 181:189
+#group mol22 molecule 190:198
+#group mol23 molecule 199:207
+#group mol24 molecule 208:216
+#group mol25 molecule 217:225
+#group mol26 molecule 226:234
+#group mol27 molecule 235:243
+#group mol28 molecule 244:252
+#group mol29 molecule 253:261
+#group mol30 molecule 262:270
+#neigh_modify exclude group mol1 mol1 
+#neigh_modify exclude group mol2 mol2 
+#neigh_modify exclude group mol3 mol3 
+#neigh_modify exclude group mol4 mol4 
+#neigh_modify exclude group mol5 mol5 
+#neigh_modify exclude group mol6 mol6 
+#neigh_modify exclude group mol7 mol7 
+#neigh_modify exclude group mol8 mol8 
+#neigh_modify exclude group mol9 mol9 
+#neigh_modify exclude group mol10 mol10
+#neigh_modify exclude group mol11 mol11
+#neigh_modify exclude group mol12 mol12
+#neigh_modify exclude group mol13 mol13
+#neigh_modify exclude group mol14 mol14
+#neigh_modify exclude group mol15 mol15
+#neigh_modify exclude group mol16 mol16
+#neigh_modify exclude group mol17 mol17
+#neigh_modify exclude group mol18 mol18
+#neigh_modify exclude group mol19 mol19
+#neigh_modify exclude group mol20 mol20
+#neigh_modify exclude group mol21 mol21
+#neigh_modify exclude group mol22 mol22
+#neigh_modify exclude group mol23 mol23
+#neigh_modify exclude group mol24 mol24
+#neigh_modify exclude group mol25 mol25
+#neigh_modify exclude group mol26 mol26
+#neigh_modify exclude group mol27 mol27
+#neigh_modify exclude group mol28 mol28
+#neigh_modify exclude group mol29 mol29
+#neigh_modify exclude group mol30 mol30
+
+#group mol1 molecule 1:270
+#neigh_modify exclude group mol1 mol1
+
+#format log file output
+thermo_style    custom step temp etotal ke pe evdwl ecoul ebond eangle edihed lx ly lz press atoms
+thermo          1000
+
+
+restart     10000  restart1.${output} restart2.${output}
+
+#minimize first
+minimize 1e-12 1.0e-10 1000 100000
+
+dump             2 all dcd 100 ${output}.out.dcd
+#dump            6 all xtc  1000 cgall.xtc
+
+dump_modify     2 sort id
+#dump_modify     6 sort id
+
+
+timestep  2.0
+#run langevin dynamics
+fix cg_langevin all langevin 298.0 298.0 100.0 699483
+fix cg_nve all nve
+run  5000000
+unfix cg_langevin
+unfix cg_nve
+
