@@ -14,4 +14,4 @@ Using the force trajectory and psf file we can run the forcematch.py scripts to 
 
 plot_lj.py and plot_lj_forces.py can be used to compare the calculed LJ potentials vs the ones defined in the prmtop 
 
-
+atol.py can be used to convert bonded parameters from a prmtop to a lammps format. This is useful if you are justing cg out the solvent. Otherwise iterative boltzmann needs to be used. Addition of these scripts will come
