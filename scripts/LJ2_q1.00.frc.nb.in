@@ -1,0 +1,25 @@
+Start Umbrella run; 3 ns
+ &cntrl
+  imin=6,
+  ntc=1,
+  ntf=1,
+  ntb=1,
+  ntwx=10,
+  ntwf=-1,
+  maxcyc=1,
+  nstlim=0,
+  cut=12.0,
+  ioutfm=1,
+ /
+&debugf
+  do_debugf=1,
+  dumpfrc=1,
+  zerochg=1,
+  zerovdw=0,
+  do_bond=0,
+  do_angle=0,
+  do_ephi=0,
+ /
+&ewald
+  use_pme=0, eedmeth=4,
+ /
